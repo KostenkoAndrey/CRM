@@ -1,34 +1,25 @@
 import React from 'react';
-import Header from "@/app/сomponents/header";
-import Toolbar from "@/app/сomponents/toolbar";
-import SearchInput from "@/app/сomponents/search-input";
-import AddCompanyButton from "@/app/сomponents/add-company-button";
-import CompanyTable from "@/app/сomponents/company-table";
-import CompanyRow from "@/app/сomponents/company-row";
-import {Status} from "@/app/сomponents/status-label";
+import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
+import { getCompanies } from '@/lib/api';
+import getQueryClient from '@/lib/utils/getQueryClient';
+import CompanyTable from '@/app/сomponents/company-table';
 
+export interface PageProps {}
 
-const Page = () => {
-    return (
-      <>
-        <Header>Companies</Header>
-        <Toolbar action={<AddCompanyButton />}>
-          <SearchInput />
-        </Toolbar>
-        <CompanyTable>
-          <CompanyRow
-            id={1}
-            category={'Product'}
-            company={'Costco'}
-            status={Status.Pending}
-            promotion={true}
-            country={'USA'}
-            joinedDate={'02.19.2023'}
-          />
-        </CompanyTable>
-      </>
-    );
+export default async function Page({}: PageProps) {
+  const queryClient = getQueryClient();
 
-};
+  await queryClient.prefetchQuery({
+    queryKey: ['companies'],
+    queryFn: () => getCompanies({ cache: 'no-store' }),
+    staleTime: 10 * 1000,
+  });
 
-export default Page;
+  const dehydratedState = dehydrate(queryClient);
+
+  return (
+    <HydrationBoundary state={dehydratedState}>
+      <CompanyTable />
+    </HydrationBoundary>
+  );
+}

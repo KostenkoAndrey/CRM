@@ -5,13 +5,11 @@ export interface LayoutProps {
   children: React.ReactNode;
 }
 
-const Layout = ({ children }: LayoutProps) => {
+export default function Layout({ children }: LayoutProps) {
   return (
     <>
       <Sidebar />
-      <div className='ml-60 '>{children}</div>
+      <div className='ml-60'>{children}</div>
     </>
   );
-};
-
-export default Layout;
+}

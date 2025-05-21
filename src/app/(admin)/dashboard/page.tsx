@@ -1,12 +1,12 @@
-
 import React from 'react';
+import Header from '@/app/сomponents/header';
 
-const Page = () => {
+export interface PageProps {}
+
+export default function Page({}: PageProps) {
   return (
-    <main>
-        <h1 className='text-xl'>Dashboard Page</h1>
-    </main>
+    <>
+      <Header>Dashboard</Header>
+    </>
   );
-};
-
-export default Page;
+}
